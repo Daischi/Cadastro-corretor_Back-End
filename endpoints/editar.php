@@ -17,9 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         exit;
     }
 
-    // Preenche as variáveis
+    // Preenche as variáveis e remove pontos e traços do CPF
     $id = $data['id'];
-    $cpf = $data['cpf'];
+    $cpf = preg_replace('/\D/', '', $data['cpf']); // Remove tudo que não for número
     $creci = $data['creci'];
     $name = $data['name'];
 
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     if ($stmt->execute()) {
         echo json_encode(["message" => "Registro atualizado com sucesso!"]);
     } else {
-        echo json_encode(["error" => "Erro ao atualizar!"]);
+        echo json_encode(["error" => "Erro ao atualizar!", "mysql_error" => $stmt->error]);
         http_response_code(500);
     }
 
